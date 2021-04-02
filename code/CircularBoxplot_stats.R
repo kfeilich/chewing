@@ -6,6 +6,7 @@ CircularBoxplotStats <- function(A, animal, units="degrees", constant="optimal")
   # checking if package are installed, if not they will be installed
   library(circular) #| install.packages("circular", dep=T)
 
+  A <- na.exclude(A)
   #Check if Median is uniquely defined
   if(is.na(median.circular(A))==T){stop("The median is not unique for this data set. \n \ The circular boxplot is not drawn.")}
   
@@ -319,7 +320,7 @@ CircularBoxplotStats <- function(A, animal, units="degrees", constant="optimal")
     } else {
       out$fences <- deg(c(fC, fA))
     }
-   
+  ranks <- data
   out_df <- data.frame("median" = as.numeric(out$median), 
                        "q25" = as.numeric(out$quartiles[1]),
                        "q75" = as.numeric(out$quartiles[2]), 
@@ -335,7 +336,7 @@ linear_circular_boxplot <- function(cyclic_times_to_minima, animal){
   circular_objects <- list()
   for (i in c(1:ncol(cyclic_times_to_minima))){
     x <- circular(cyclic_times_to_minima[,i], units = "degrees")
-    circular_objects[[i]] <- CircularBoxplotStats(x, "chewbacca")
+    circular_objects[[i]] <- CircularBoxplotStats(x, animal)
     circular_objects[[i]][[1]]$variable <- colnames(cyclic_times_to_minima)[i]
    # circular_objects[[i]]$column <- colnames(cyclic_times_to_minima)[i]
   }
