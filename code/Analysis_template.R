@@ -92,52 +92,5 @@ hestia_stats <- linear_circular_boxplot(hestia_analysis$cranium_CRS$times_to_min
 jb_stats <- linear_circular_boxplot(jb_analysis$cranium_CRS$times_to_minima_cyclic, "jb")
 kiki_stats<- linear_circular_boxplot(kiki_analysis$cranium_CRS$times_to_minima_cyclic, "kiki")
 
-all_stats <- bind_rows(chewbacca_stats[[1]], hestia_stats[[1]], jb_stats[[1]], kiki_stats[[1]]) %>% 
-  mutate(variable = as.factor(variable))
-segments_to_draw <- filter(all_stats, whigh > 360) %>%
-  dplyr::select(whigh, q75, animal, variable) %>% mutate(whigh = whigh - 360)
-
-chewbacca_constant <- (-0.34)
-hestia_constant <- (-0.12)
-jb_constant <- 0.12
-kiki_constant <- 0.34
-
-ggplot(all_stats) +
-  geom_boxplot(aes(fill = animal, 
-                   y = variable, 
-                   xmin =wlow/3.6, 
-                   xlower = q25/3.6, 
-                   xmiddle = median/3.6,
-                   xupper = q75/3.6, 
-                   xmax = whigh/3.6), stat = "identity") +
-  geom_segment(y = as.numeric(segments_to_draw$variable[1]) + hestia_constant, x = 0, xend = segments_to_draw$whigh[1]/3.6, yend = as.numeric(segments_to_draw$variable[1]) + hestia_constant)+ #Hestia
-  geom_segment(y = as.numeric(segments_to_draw$variable[1]) + hestia_constant, x = segments_to_draw$q75[1]/3.6, xend = 100, yend = as.numeric(segments_to_draw$variable[1]) + hestia_constant)+ #Hestia
-  geom_segment(y = as.numeric(segments_to_draw$variable[2]) + jb_constant, x = 0, xend = segments_to_draw$whigh[2]/3.6, yend = as.numeric(segments_to_draw$variable[2]) + jb_constant)+ #JB
-  geom_segment(y = as.numeric(segments_to_draw$variable[2]) + jb_constant, x = segments_to_draw$q75[2]/3.6, xend = 100, yend = as.numeric(segments_to_draw$variable[2]) + jb_constant)+ #JB
-  geom_segment(y = as.numeric(segments_to_draw$variable[3]) + kiki_constant, x = 0, xend = segments_to_draw$whigh[3]/3.6, yend = as.numeric(segments_to_draw$variable[3]) + kiki_constant)+ #Kiki
-  geom_segment(y = as.numeric(segments_to_draw$variable[3]) + kiki_constant, x = segments_to_draw$q75[3]/3.6, xend = 100, yend = as.numeric(segments_to_draw$variable[3]) + kiki_constant)+ #Kiki
-  
-  # "Far out" points
-  # Chewbacca
-  geom_point(y = 6 + chewbacca_constant, x = chewbacca_stats[[2]]$WorkingMiddleHorizontalRot_mintime/3.6)+
-  geom_point(y = 7 + chewbacca_constant, x = chewbacca_stats[[2]]$WorkingMiddleVerticalRot_mintime[1]/3.6)+
-  geom_point(y = 7 + chewbacca_constant, x = chewbacca_stats[[2]]$WorkingMiddleVerticalRot_mintime[2]/3.6)+
-  geom_point(y = 8 + chewbacca_constant, x = chewbacca_stats[[2]]$WorkingPosteriorHorizontalRot_mintime[1]/3.6)+
-  geom_point(y = 8 + chewbacca_constant, x = chewbacca_stats[[2]]$WorkingPosteriorHorizontalRot_mintime[2]/3.6)+
-  geom_point(y = 8 + chewbacca_constant, x = chewbacca_stats[[2]]$WorkingPosteriorHorizontalRot_mintime[3]/3.6)+
-  geom_point(y = 8 + chewbacca_constant, x = chewbacca_stats[[2]]$WorkingPosteriorHorizontalRot_mintime[4]/3.6)+
-  geom_point(y = 8 + chewbacca_constant, x = chewbacca_stats[[2]]$WorkingPosteriorHorizontalRot_mintime[5]/3.6)+
-  geom_point(y = 10 + chewbacca_constant, x = chewbacca_stats[[2]]$WorkingPosteriorVerticalRot_mintime[1]/3.6)+
-  geom_point(y = 10 + chewbacca_constant, x = chewbacca_stats[[2]]$WorkingPosteriorVerticalRot_mintime[2]/3.6)+
-  geom_point(y = 10 + chewbacca_constant, x = chewbacca_stats[[2]]$WorkingPosteriorVerticalRot_mintime[3]/3.6)+
-  geom_point(y = 10 + chewbacca_constant, x = chewbacca_stats[[2]]$WorkingPosteriorVerticalRot_mintime[4]/3.6)+
-  geom_point(y = 1 + chewbacca_constant, x = chewbacca_stats[[2]]$BalancingAnteriorStrain_mintime[1]/3.6)+
-  geom_point(y = 1 + chewbacca_constant, x = chewbacca_stats[[2]]$BalancingAnteriorStrain_mintime[2]/3.6)+
-  geom_point(y = 1 + chewbacca_constant, x = chewbacca_stats[[2]]$BalancingAnteriorStrain_mintime[3]/3.6)+
-  geom_point(y = 1 + chewbacca_constant, x = chewbacca_stats[[2]]$BalancingAnteriorStrain_mintime[4]/3.6)+
-  geom_point(y = 1 + chewbacca_constant, x = chewbacca_stats[[2]]$BalancingAnteriorStrain_mintime[5]/3.6)+
-  geom_point(y = 4 + chewbacca_constant, x = chewbacca_stats[[2]]$TongueAngle_mintime[1]/3.6)+
-   
-   xlim(0,100)+
-  theme_minimal()
- 
+# all_stats <- bind_rows(chewbacca_stats[[1]], hestia_stats[[1]], jb_stats[[1]], kiki_stats[[1]]) %>% 
+#   mutate(variable = as.factor(variable))

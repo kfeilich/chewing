@@ -169,6 +169,214 @@ plot_grid(chewbacca_rightchews_gape, hestia_rightchews_gape, jb_rightchews_gape,
           ncol = 4)
 dev.off()
 
+
+# BOXPLOTS OF CIRCULAR STATS
+chewbacca_segments_to_draw <- filter(chewbacca_stats[[1]], whigh > 360) %>%
+  dplyr::select(whigh, q75, animal, variable) %>% mutate(whigh = whigh - 360)
+hestia_segments_to_draw <- filter(hestia_stats[[1]], whigh > 360) %>%
+  dplyr::select(whigh, q75, animal, variable) %>% mutate(whigh = whigh - 360)
+jb_segments_to_draw <- filter(jb_stats[[1]], whigh > 360) %>%
+  dplyr::select(whigh, q75, animal, variable) %>% mutate(whigh = whigh - 360)
+kiki_segments_to_draw <- filter(kiki_stats[[1]], whigh > 360) %>%
+  dplyr::select(whigh, q75, animal, variable) %>% mutate(whigh = whigh - 360)
+ 
+chewbacca_boxplot <- ggplot(chewbacca_stats[[1]]) +
+  geom_boxplot(aes(y = variable,
+                   xmin =wlow/3.6,
+                   xlower = q25/3.6,
+                   xmiddle = median/3.6,
+                   xupper = q75/3.6,
+                   xmax = whigh/3.6), stat = "identity") +
+  xlim(0,100)+
+  coord_cartesian(expand = c(0,0))+
+  
+  # Wrap around segments: Chewbacca has none
+  
+  # Far out points: 
+  geom_point(x = chewbacca_stats[[2]]$TongueAngle_mintime[1]/3.6, y = 1)+  # TongueAngle, 1 outlier
+  geom_point(x = chewbacca_stats[[2]]$WorkingPosteriorVerticalRot_mintime[1]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 1/4 outliers
+  geom_point(x = chewbacca_stats[[2]]$WorkingPosteriorVerticalRot_mintime[2]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 2/4 outliers
+  geom_point(x = chewbacca_stats[[2]]$WorkingPosteriorVerticalRot_mintime[3]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 3/4 outliers
+  geom_point(x = chewbacca_stats[[2]]$WorkingPosteriorVerticalRot_mintime[4]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 4/4 outliers
+  geom_point(x = chewbacca_stats[[2]]$WorkingPosteriorHorizontalRot_mintime[1]/3.6, y = 3)+ # WorkingPosteriorHorizontal Rot, 1/5 outliers
+  geom_point(x = chewbacca_stats[[2]]$WorkingPosteriorHorizontalRot_mintime[2]/3.6, y = 3)+ # WorkingPosteriorHorizontal Rot, 2/5 outliers
+  geom_point(x = chewbacca_stats[[2]]$WorkingPosteriorHorizontalRot_mintime[3]/3.6, y = 3)+ # WorkingPosteriorHorizontal Rot, 3/5 outliers
+  geom_point(x = chewbacca_stats[[2]]$WorkingPosteriorHorizontalRot_mintime[4]/3.6, y = 3)+ # WorkingPosteriorHorizontal Rot, 4/5 outliers
+  geom_point(x = chewbacca_stats[[2]]$WorkingPosteriorHorizontalRot_mintime[5]/3.6, y = 3)+ # WorkingPosteriorHorizontal Rot, 5/5 outliers
+  geom_point(x = chewbacca_stats[[2]]$WorkingMiddleVerticalRot_mintime[1]/3.6, y = 4)+ # WorkingMiddleVerticalRot, 1/2 outliers
+  geom_point(x = chewbacca_stats[[2]]$WorkingMiddleVerticalRot_mintime[2]/3.6, y = 4)+ # WorkingMiddleVerticalRot, 2/2 outliers
+  geom_point(x = chewbacca_stats[[2]]$WorkingMiddleHorizontalRot_mintime[1]/3.6, y = 5)+ # WorkingMiddleHorizontalRot, 1 outlier
+  # No balancinposteriorstrain outliers
+  # No workingposteriorstrain outliers
+  geom_point(x = chewbacca_stats[[2]]$BalancingAnteriorStrain_mintime[1]/3.6, y = 8)+  #BalancingAnteriorStrain, 1/4 outliers
+  geom_point(x = chewbacca_stats[[2]]$BalancingAnteriorStrain_mintime[2]/3.6, y = 8)+  #BalancingAnteriorStrain, 2/4 outliers
+  geom_point(x = chewbacca_stats[[2]]$BalancingAnteriorStrain_mintime[3]/3.6, y = 8)+  #BalancingAnteriorStrain, 3/4 outliers
+  geom_point(x = chewbacca_stats[[2]]$BalancingAnteriorStrain_mintime[4]/3.6, y = 8)+  #BalancingAnteriorStrain, 4/4 outliers
+  # No workinganteriorstrain outliers
+  # No mandiblepitch outliers
+  
+  scale_y_discrete(labels=c("TongueAngle_mintime" = "Tongue Angle", 
+                            "WorkingPosteriorVerticalRot_mintime" = "Working Posterior Vertical Rotation",
+                            "WorkingPosteriorHorizontalRot_mintime" = "Working Posterior Horizontal Rotation",
+                            "WorkingMiddleVerticalRot_mintime" = "Working Middle Vertical Rotation",
+                            "WorkingMiddleHorizontalRot_mintime" = "Working Middle Horizontal Rotation",
+                            "BalancingPosteriorStrain_mintime" = "Balancing Posterior Strain",
+                            "WorkingPosteriorStrain_mintime" = "Working Posterior Strain",
+                            "BalancingAnteriorStrain_mintime" = "Balancing Anterior Strain",
+                            "WorkingAnteriorStrain_mintime" = "Working Anterior Strain",
+                            "mandiblePitch_mintime" = "Mandible Pitch")) +
+  ggtitle("Animal C, n = 54")+
+  xlab("Scaled Time (%)")+
+  theme_minimal()
+
+
+hestia_boxplot <- ggplot(hestia_stats[[1]]) +
+  geom_boxplot(aes(y = variable,
+                   xmin =wlow/3.6,
+                   xlower = q25/3.6,
+                   xmiddle = median/3.6,
+                   xupper = q75/3.6,
+                   xmax = whigh/3.6), stat = "identity") +
+  xlim(0,100)+
+  coord_cartesian(expand = c(0,0))+
+  
+  # Wrap around segments
+  geom_segment(data = hestia_segments_to_draw, aes(x  = 0, y = as.numeric(variable), xend = whigh/3.6, yend = as.numeric(variable)))+
+  geom_segment(data = hestia_segments_to_draw, aes(x  = q75/3.6, y = as.numeric(variable), xend = 100, yend = as.numeric(variable)))+
+  
+  # Far out points: 
+  # geom_point(x = hestia_stats[[2]]$TongueAngle_mintime[1]/3.6, y = 1)+  # TongueAngle, 35 outliers? Check this
+  geom_point(x = hestia_stats[[2]]$WorkingPosteriorVerticalRot_mintime[1]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 1/9 outliers
+  geom_point(x = hestia_stats[[2]]$WorkingPosteriorVerticalRot_mintime[2]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 2/9 outliers
+  geom_point(x = hestia_stats[[2]]$WorkingPosteriorVerticalRot_mintime[3]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 3/9 outliers
+  geom_point(x = hestia_stats[[2]]$WorkingPosteriorVerticalRot_mintime[4]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 4/9 outliers
+  geom_point(x = hestia_stats[[2]]$WorkingPosteriorVerticalRot_mintime[5]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 5/9 outliers
+  geom_point(x = hestia_stats[[2]]$WorkingPosteriorVerticalRot_mintime[6]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 6/9 outliers
+  geom_point(x = hestia_stats[[2]]$WorkingPosteriorVerticalRot_mintime[7]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 7/9 outliers
+  geom_point(x = hestia_stats[[2]]$WorkingPosteriorVerticalRot_mintime[8]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 8/9 outliers
+  geom_point(x = hestia_stats[[2]]$WorkingPosteriorVerticalRot_mintime[9]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 9/9 outliers
+  # No working posterior horizontal rot outliers
+  geom_point(x = hestia_stats[[2]]$WorkingMiddleVerticalRot_mintime[1]/3.6, y = 4)+ # WorkingMiddleVerticalRot, 1/4 outliers
+  geom_point(x = hestia_stats[[2]]$WorkingMiddleVerticalRot_mintime[2]/3.6, y = 4)+ # WorkingMiddleVerticalRot, 2/4 outliers
+  geom_point(x = hestia_stats[[2]]$WorkingMiddleVerticalRot_mintime[3]/3.6, y = 4)+ # WorkingMiddleVerticalRot, 3/4 outliers
+  geom_point(x = hestia_stats[[2]]$WorkingMiddleVerticalRot_mintime[4]/3.6, y = 4)+ # WorkingMiddleVerticalRot, 4/4 outliers
+  geom_point(x = hestia_stats[[2]]$WorkingMiddleHorizontalRot_mintime[1]/3.6, y = 5)+ # WorkingMiddleHorizontalRot, 1/2 outliers
+  geom_point(x = hestia_stats[[2]]$WorkingMiddleHorizontalRot_mintime[2]/3.6, y = 5)+ # WorkingMiddleHorizontalRot, 2/2 outliers
+  # No balancinposteriorstrain outliers
+  # No workingposteriorstrain outliers
+  # no balancinganteriorstrain outliers
+  # No workinganteriorstrain outliers
+  # No mandible pitch outliers
+  
+  scale_y_discrete(labels=c("TongueAngle_mintime" = "Tongue Angle", 
+                            "WorkingPosteriorVerticalRot_mintime" = "Working Posterior Vertical Rotation",
+                            "WorkingPosteriorHorizontalRot_mintime" = "Working Posterior Horizontal Rotation",
+                            "WorkingMiddleVerticalRot_mintime" = "Working Middle Vertical Rotation",
+                            "WorkingMiddleHorizontalRot_mintime" = "Working Middle Horizontal Rotation",
+                            "BalancingPosteriorStrain_mintime" = "Balancing Posterior Strain",
+                            "WorkingPosteriorStrain_mintime" = "Working Posterior Strain",
+                            "BalancingAnteriorStrain_mintime" = "Balancing Anterior Strain",
+                            "WorkingAnteriorStrain_mintime" = "Working Anterior Strain",
+                            "mandiblePitch_mintime" = "Mandible Pitch")) +
+  ggtitle("Animal H, n = 35")+
+  xlab("Scaled Time (%)")+
+  theme_minimal()
+
+jb_boxplot <- ggplot(jb_stats[[1]]) +
+  geom_boxplot(aes(y = variable,
+                   xmin =wlow/3.6,
+                   xlower = q25/3.6,
+                   xmiddle = median/3.6,
+                   xupper = q75/3.6,
+                   xmax = whigh/3.6), stat = "identity") +
+  xlim(0,100)+
+  coord_cartesian(expand = c(0,0))+
+  
+  # Wrap around segments
+  geom_segment(data = jb_segments_to_draw, aes(x  = 0, y = as.numeric(variable), xend = whigh/3.6, yend = as.numeric(variable)))+
+  geom_segment(data = jb_segments_to_draw, aes(x  = q75/3.6, y = as.numeric(variable), xend = 100, yend = as.numeric(variable)))+
+  
+  # Far out points: 
+  # No tongueangle outliers
+  geom_point(x = jb_stats[[2]]$WorkingPosteriorVerticalRot_mintime[1]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 1/3 outliers
+  geom_point(x = jb_stats[[2]]$WorkingPosteriorVerticalRot_mintime[2]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 2/3 outliers
+  geom_point(x = jb_stats[[2]]$WorkingPosteriorVerticalRot_mintime[3]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 3/3 outliers
+  # No working posterior horizontal rotation outliers
+  # No working middle vertical rotation outliers
+  # No working middle horizontal rotation outliers
+  # No balancing posterior strain outliers
+  # No working posterior strain outliers
+  geom_point(x = jb_stats[[2]]$BalancingAnteriorStrain_mintime[1]/3.6, y = 8)+ # BalancingAnteriorStrain 1 outlier
+  geom_point(x = jb_stats[[2]]$WorkingAnteriorStrain_mintime[1]/3.6, y = 9)+ # WorkingAnteriorStrain 1 outlier  
+  # No mandible pitch outliers
+  
+  scale_y_discrete(labels=c("TongueAngle_mintime" = "Tongue Angle", 
+                            "WorkingPosteriorVerticalRot_mintime" = "Working Posterior Vertical Rotation",
+                            "WorkingPosteriorHorizontalRot_mintime" = "Working Posterior Horizontal Rotation",
+                            "WorkingMiddleVerticalRot_mintime" = "Working Middle Vertical Rotation",
+                            "WorkingMiddleHorizontalRot_mintime" = "Working Middle Horizontal Rotation",
+                            "BalancingPosteriorStrain_mintime" = "Balancing Posterior Strain",
+                            "WorkingPosteriorStrain_mintime" = "Working Posterior Strain",
+                            "BalancingAnteriorStrain_mintime" = "Balancing Anterior Strain",
+                            "WorkingAnteriorStrain_mintime" = "Working Anterior Strain",
+                            "mandiblePitch_mintime" = "Mandible Pitch")) +
+  ggtitle("Animal J, n = 23")+
+  xlab("Scaled Time (%)")+
+  theme_minimal()
+
+kiki_boxplot <- ggplot(kiki_stats[[1]]) +
+  geom_boxplot(aes(y = variable,
+                   xmin =wlow/3.6,
+                   xlower = q25/3.6,
+                   xmiddle = median/3.6,
+                   xupper = q75/3.6,
+                   xmax = whigh/3.6), stat = "identity") +
+  xlim(0,100)+
+  coord_cartesian(expand = c(0,0))+
+  
+  # Wrap around segments
+  geom_segment(data = kiki_segments_to_draw, aes(x  = 0, y = as.numeric(variable), xend = whigh/3.6, yend = as.numeric(variable)))+
+  geom_segment(data = kiki_segments_to_draw, aes(x  = q75/3.6, y = as.numeric(variable), xend = 100, yend = as.numeric(variable)))+
+  
+  # Far out points: 
+  geom_point(x = kiki_stats[[2]]$TongueAngle_mintime[1]/3.6, y = 1)+  # TongueAngle, 1/3 outliers
+  geom_point(x = kiki_stats[[2]]$TongueAngle_mintime[2]/3.6, y = 1)+  # TongueAngle, 2/3 outliers
+  geom_point(x = kiki_stats[[2]]$TongueAngle_mintime[3]/3.6, y = 1)+  # TongueAngle, 3/3 outliers
+  geom_point(x = kiki_stats[[2]]$WorkingPosteriorVerticalRot_mintime[1]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 1/3 outliers
+  geom_point(x = kiki_stats[[2]]$WorkingPosteriorVerticalRot_mintime[2]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 2/3 outliers
+  geom_point(x = kiki_stats[[2]]$WorkingPosteriorVerticalRot_mintime[3]/3.6, y = 2)+ # WorkingPosteriorVertical Rot, 3/3 outliers
+  # No working posterior horizontal rot outliers
+  # No working middle vertical rot outliers
+  geom_point(x = kiki_stats[[2]]$WorkingMiddleHorizontalRot_mintime[1]/3.6, y = 5)+ # WorkingMiddleHorizontalRot, 1/2 outliers
+  geom_point(x = kiki_stats[[2]]$WorkingMiddleHorizontalRot_mintime[2]/3.6, y = 5)+ # WorkingMiddleHorizontalRot, 2/2 outliers
+  geom_point(x = kiki_stats[[2]]$BalancingPosteriorStrain_mintime[1]/3.6, y = 6)+ # BalancingPosteriorStrain 1/4
+  geom_point(x = kiki_stats[[2]]$BalancingPosteriorStrain_mintime[2]/3.6, y = 6)+ # BalancingPosteriorStrain 2/4
+  geom_point(x = kiki_stats[[2]]$BalancingPosteriorStrain_mintime[3]/3.6, y = 6)+ # BalancingPosteriorStrain 3/4
+  geom_point(x = kiki_stats[[2]]$BalancingPosteriorStrain_mintime[4]/3.6, y = 6)+ # BalancingPosteriorStrain 4/4
+  geom_point(x = kiki_stats[[2]]$WorkingPosteriorStrain_mintime[1]/3.6, y = 7)+ # WorkingPosteriorStrain 1/3
+  geom_point(x = kiki_stats[[2]]$WorkingPosteriorStrain_mintime[2]/3.6, y = 7)+ # WorkingPosteriorStrain 2/3
+  geom_point(x = kiki_stats[[2]]$WorkingPosteriorStrain_mintime[3]/3.6, y = 7)+ # WorkingPosteriorStrain 3/3
+  # No balancing anterior strain outliers
+  geom_point(x = kiki_stats[[2]]$WorkingAnteriorStrain_mintime[1]/3.6, y = 9)+ # WorkingAnteriorStrain 1 outlier 
+  # No mandible pitch outliers 
+  scale_y_discrete(labels=c("TongueAngle_mintime" = "Tongue Angle", 
+                            "WorkingPosteriorVerticalRot_mintime" = "Working Posterior Vertical Rotation",
+                            "WorkingPosteriorHorizontalRot_mintime" = "Working Posterior Horizontal Rotation",
+                            "WorkingMiddleVerticalRot_mintime" = "Working Middle Vertical Rotation",
+                            "WorkingMiddleHorizontalRot_mintime" = "Working Middle Horizontal Rotation",
+                            "BalancingPosteriorStrain_mintime" = "Balancing Posterior Strain",
+                            "WorkingPosteriorStrain_mintime" = "Working Posterior Strain",
+                            "BalancingAnteriorStrain_mintime" = "Balancing Anterior Strain",
+                            "WorkingAnteriorStrain_mintime" = "Working Anterior Strain",
+                            "mandiblePitch_mintime" = "Mandible Pitch")) +
+  ggtitle("Animal K, n = 25")+
+  xlab("Scaled Time (%)")+
+  theme_minimal()
+
+svg(filename = paste0(paste0("figures/Boxplots_", gsub("-", "",Sys.Date())), ".svg"), width = 16, height = 6)
+plot_grid(chewbacca_boxplot, hestia_boxplot, jb_boxplot, kiki_boxplot, ncol = 4, align = 'h')
+dev.off()
+  
 # PHASE PLOTS ----
 # mandiblepitch_phase<-plot_circular_histogram("mandiblePitch_mintime", list("Chewbacca" = chewbacca_analysis, 
 #                                                       "Hestia"=hestia_analysis, 

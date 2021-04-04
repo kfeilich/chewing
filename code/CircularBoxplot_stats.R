@@ -349,6 +349,18 @@ linear_circular_boxplot <- function(cyclic_times_to_minima, animal){
     outliers[[i]] <- circular_objects[[i]][[2]]
   }
   names(outliers) <- colnames(cyclic_times_to_minima)
-  box_stats <- bind_rows(box_stats)
+  box_stats <- bind_rows(box_stats) %>%
+    mutate(variable = factor(variable, levels =c("TongueAngle_mintime",
+                                                 "WorkingPosteriorVerticalRot_mintime",
+                                                 "WorkingPosteriorHorizontalRot_mintime",
+                                                 "WorkingMiddleVerticalRot_mintime",
+                                                 "WorkingMiddleHorizontalRot_mintime",
+                                                 "BalancingPosteriorStrain_mintime",
+                                                 "WorkingPosteriorStrain_mintime",
+                                                 "BalancingAnteriorStrain_mintime",
+                                                 "WorkingAnteriorStrain_mintime", 
+                                                 "mandiblePitch_mintime")
+                             , ordered = TRUE))
   list(box_stats, outliers)
 }
+
