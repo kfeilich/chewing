@@ -92,5 +92,19 @@ hestia_stats <- linear_circular_boxplot(hestia_analysis$cranium_CRS$times_to_min
 jb_stats <- linear_circular_boxplot(jb_analysis$cranium_CRS$times_to_minima_cyclic, "jb")
 kiki_stats<- linear_circular_boxplot(kiki_analysis$cranium_CRS$times_to_minima_cyclic, "kiki")
 
-# all_stats <- bind_rows(chewbacca_stats[[1]], hestia_stats[[1]], jb_stats[[1]], kiki_stats[[1]]) %>% 
-#   mutate(variable = as.factor(variable))
+circular_means_comparison(chewbacca_analysis$cranium_CRS$times_to_minima_cyclic[,"TongueAngle_mintime"], 
+                          chewbacca_analysis$cranium_CRS$times_to_minima_cyclic[,"WorkingMiddleHorizontalRot_mintime"])
+circular_means_comparison(hestia_analysis$cranium_CRS$times_to_minima_cyclic[,"TongueAngle_mintime"], 
+                          hestia_analysis$cranium_CRS$times_to_minima_cyclic[,"WorkingMiddleHorizontalRot_mintime"])
+circular_means_comparison(jb_analysis$cranium_CRS$times_to_minima_cyclic[,"TongueAngle_mintime"], 
+                          jb_analysis$cranium_CRS$times_to_minima_cyclic[,"WorkingMiddleHorizontalRot_mintime"])
+circular_means_comparison(kiki_analysis$cranium_CRS$times_to_minima_cyclic[,"TongueAngle_mintime"],
+                          kiki_analysis$cranium_CRS$times_to_minima_cyclic[,"WorkingMiddleHorizontalRot_mintime"])
+circular_means_comparison(chewbacca_analysis$cranium_CRS$times_to_minima_cyclic[,"BalancingAnteriorStrain_mintime"],
+                          chewbacca_analysis$cranium_CRS$times_to_minima_cyclic[,"TongueAngle_mintime"])
+circular_means_comparison(hestia_analysis$cranium_CRS$times_to_minima_cyclic[,"BalancingAnteriorStrain_mintime"], 
+                          hestia_analysis$cranium_CRS$times_to_minima_cyclic[,"TongueAngle_mintime"])
+circular_means_comparison(jb_analysis$cranium_CRS$times_to_minima_cyclic[,"BalancingAnteriorStrain_mintime"], 
+                          jb_analysis$cranium_CRS$times_to_minima_cyclic[,"TongueAngle_mintime"])
+circular_means_comparison(kiki_analysis$cranium_CRS$times_to_minima_cyclic[,"BalancingAnteriorStrain_mintime"],
+                          kiki_analysis$cranium_CRS$times_to_minima_cyclic[,"TongueAngle_mintime"])

@@ -166,7 +166,7 @@ CircularBoxplotStats <- function(A, animal, units="degrees", constant="optimal")
         swc <- subset(semicircleClock, semicircleClock>=fC)
         swc <- c(swc, QClock)
         wC <- min(swc)
-        faroutClock <- subset(semicircleClock, semicircleClock>=0 | semicircleClock<fC)  
+        faroutClock <- subset(semicircleClock, semicircleClock>=0 & semicircleClock<fC)  
       } 
       swa <- subset(semicircleAnti, semicircleAnti<=fA)
       swa <- c(swa, QAnti)
@@ -331,7 +331,6 @@ CircularBoxplotStats <- function(A, animal, units="degrees", constant="optimal")
 }  
 
 
-
 linear_circular_boxplot <- function(cyclic_times_to_minima, animal){
   circular_objects <- list()
   for (i in c(1:ncol(cyclic_times_to_minima))){
@@ -364,3 +363,35 @@ linear_circular_boxplot <- function(cyclic_times_to_minima, animal){
   list(box_stats, outliers)
 }
 
+
+circular_means_comparison <- function(circular_a, circular_b){
+  a_b <- cbind(circular_a, circular_b)[complete.cases(cbind(circular_a, circular_b)),]
+  a <- circular(a_b[,"circular_a"], units = "degrees")
+  b <- circular(a_b[,"circular_b"], units = "degrees")
+  
+  difference <- a - b
+  difference
+  
+  # Calc confidence intervals, from Fisher N.I. 1993 Statistical analysis of circular data, pp. 32, 33, 76
+  mean_resultant_length <- rho.circular(difference)
+  C_bar_2 <- (1/length(difference)) * sum(cos(2 * rad(difference)))
+  S_bar_2 <- (1/length(difference)) * sum(sin(2 * rad(difference)))
+  rho_hat_two <- (C_bar_2**2 + S_bar_2**2)**(1/2)
+  
+  circ_dispersion <- (1 - rho_hat_two) / (2 * mean_resultant_length**2)
+  circ_standard_error <- sqrt(circ_dispersion / length(difference))
+  
+  #Percentiles of normal distribution 
+  
+  z_0.005 <- qnorm(1-0.01/2)
+  upper_95CI <- mean.circular(difference) + deg(asin(z_0.005 *  circ_standard_error))
+  lower_95CI <- mean.circular(difference) - deg(asin(z_0.005 *  circ_standard_error))
+  
+  list("difference" = difference,
+       "mean_percent" = mean.circular(difference)/3.6, 
+       "mean" = mean.circular(difference),
+       "ci_95" =  c(lower_95CI, upper_95CI), 
+       "ci_95_percent" = c(lower_95CI, upper_95CI)/ 3.6,
+       "ci_single_percent" = deg(asin(z_0.005 * circ_standard_error))/3.6)
+  
+  }
