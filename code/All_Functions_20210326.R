@@ -235,14 +235,15 @@ calculate_rotations <- function(trial_data){
   post_deep_z <- names(trial_data)[str_detect(names(trial_data),
                                              pattern = "[Hh]yoid[.]*[Mm]iddle_[0-9]+Hz_Z$")]
   
+  # NB: Negative to correct for axis of rotation polarity
   trial_data <- trial_data %>% 
-    mutate(MiddleHorizontalRot = find_angle_to_z(.data[[middle_left_z]], .data[[middle_left_y]],
+    mutate(MiddleHorizontalRot = -find_angle_to_z(.data[[middle_left_z]], .data[[middle_left_y]],
                                                  .data[[middle_right_z]], .data[[middle_right_y]]),
-           MiddleVerticalRot = find_angle_to_y(.data[[middle_deep_z]], .data[[middle_deep_y]],
+           MiddleVerticalRot = -find_angle_to_y(.data[[middle_deep_z]], .data[[middle_deep_y]],
                                                .data[[middle_surface_z]], .data[[middle_surface_y]]),
-           PostHorizontalRot = find_angle_to_z(.data[[post_left_z]], .data[[post_left_y]],
+           PostHorizontalRot = -find_angle_to_z(.data[[post_left_z]], .data[[post_left_y]],
                                                .data[[post_right_z]], .data[[post_right_y]]),
-           PostVerticalRot = find_angle_to_y(.data[[post_deep_z]], .data[[post_deep_y]],
+           PostVerticalRot = -find_angle_to_y(.data[[post_deep_z]], .data[[post_deep_y]],
                                              .data[[post_surface_z]], .data[[post_surface_y]]))
   trial_data
   
