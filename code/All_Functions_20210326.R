@@ -677,12 +677,12 @@ plot_rotations <- function(analysis_summary,
                aes(xintercept = .data[['FC-SC_mean']] * 100), linetype = "dashed", col= "gray61")+
     geom_vline(data = analysis_object$cranium_CRS$summary_transition_times,
                aes(xintercept = .data[['SO-FO_mean']] * 100), linetype = "dashed", col= "gray61")+
-    geom_line(aes(x = .data[["ScaledTime_fromMinGape"]] * 100, y = -.data[[paste0(horz_rotation_to_plot,"_mean")]], col = "blue"), lwd = 2) +
+    geom_line(aes(x = .data[["ScaledTime_fromMinGape"]] * 100, y = -.data[[paste0(horz_rotation_to_plot,"_mean")]], col = "blue"), lwd = 1) +
     geom_ribbon(aes(x = .data[["ScaledTime_fromMinGape"]] * 100,
                     ymin = -.data[[paste0(horz_rotation_to_plot,"_mean")]] - .data[[paste0(horz_rotation_to_plot,"_sd")]],
                     ymax = -.data[[paste0(horz_rotation_to_plot,"_mean")]] + .data[[paste0(horz_rotation_to_plot,"_sd")]]),
                 fill = "blue", alpha = 0.2)+
-    geom_line(aes(x = ScaledTime_fromMinGape* 100, y = -.data[[paste0(vert_rotation_to_plot, "_mean")]], col = "red"), lwd = 2) +
+    geom_line(aes(x = ScaledTime_fromMinGape* 100, y = -.data[[paste0(vert_rotation_to_plot, "_mean")]], col = "red"), lwd = 1) +
     geom_ribbon(aes(x = .data[["ScaledTime_fromMinGape"]] * 100,
                     ymin = -.data[[paste0(vert_rotation_to_plot,"_mean")]] - .data[[paste0(vert_rotation_to_plot,"_sd")]],
                     ymax = -.data[[paste0(vert_rotation_to_plot,"_mean")]] + .data[[paste0(vert_rotation_to_plot,"_sd")]]),
@@ -706,7 +706,7 @@ plot_gape_pitch <- function(summary_object, analysis_object, limits){
   out_plot <- summary_object %>%
     ggplot() +
     geom_rect(data = analysis_object$cranium_CRS$summary_transition_times,
-              aes(xmin = (.data[['FC-SC_mean']] - .data[['FC-SC_se']]) *100,-
+              aes(xmin = (.data[['FC-SC_mean']] - .data[['FC-SC_se']]) *100,
                   xmax = (.data[['FC-SC_mean']] + .data[['FC-SC_se']]) *100,
                   ymin = -Inf, ymax = Inf), alpha = 0.1)+
     geom_rect(data = analysis_object$cranium_CRS$summary_transition_times,
@@ -717,7 +717,7 @@ plot_gape_pitch <- function(summary_object, analysis_object, limits){
                aes(xintercept = .data[['FC-SC_mean']] * 100), linetype = "dashed", col= "gray61")+
     geom_vline(data = analysis_object$cranium_CRS$summary_transition_times,
                aes(xintercept = .data[['SO-FO_mean']] * 100), linetype = "dashed", col= "gray61")+
-    geom_line(aes(x = ScaledTime_fromMinGape * 100, y = mandiblePitch_mean), col = "#B07AA1", lwd = 2) +
+    geom_line(aes(x = ScaledTime_fromMinGape * 100, y = mandiblePitch_mean), col = "#B07AA1", lwd = 1) +
     geom_ribbon(aes(x = ScaledTime_fromMinGape* 100,
                       ymin = mandiblePitch_mean - mandiblePitch_sd,
                       ymax = mandiblePitch_mean + mandiblePitch_sd), fill = "#B07AA1", alpha = 0.3) +
@@ -748,7 +748,7 @@ plot_tongue_tip <- function(summary_object, analysis_object, limits){
                aes(xintercept = .data[['FC-SC_mean']] * 100), linetype = "dashed", col= "gray61")+
     geom_vline(data = analysis_object$cranium_CRS$summary_transition_times,
                aes(xintercept = .data[['SO-FO_mean']] * 100), linetype = "dashed", col= "gray61")+
-    geom_line(aes(x = ScaledTime_fromMinGape * 100, y = .data[[tongue_column[1]]] *10), col = "#59a14f", lwd = 2)+
+    geom_line(aes(x = ScaledTime_fromMinGape * 100, y = .data[[tongue_column[1]]] *10), col = "#59a14f", lwd = 1)+
     geom_ribbon(aes(x = ScaledTime_fromMinGape * 100, 
                     ymin =(.data[[tongue_column[1]]] - .data[[tongue_column[2]]])*10,
                     ymax = (.data[[tongue_column[1]]] + .data[[tongue_column[2]]])*10),
@@ -782,11 +782,11 @@ plot_lr_midtoant_distance <- function(summary_object, analysis_object, limits){
     geom_vline(data = analysis_object$cranium_CRS$summary_transition_times,
                aes(xintercept = .data[['SO-FO_mean']] * 100), linetype = "dashed", col= "gray61")+
     geom_line(aes(x = ScaledTime_fromMinGape * 100, 
-                   y = (WorkingAnteriorStrain_mean -1)*100, col = "#FF9DA7"), lwd = 2) + 
+                   y = (WorkingAnteriorStrain_mean -1)*100, col = "#FF9DA7"), lwd = 1) + 
     geom_ribbon(aes(x = ScaledTime_fromMinGape * 100, 
                       ymin = (WorkingAnteriorStrain_mean -WorkingAnteriorStrain_sd -1) *100 , 
                       ymax = (WorkingAnteriorStrain_mean  + WorkingAnteriorStrain_sd-1)*100 ), alpha = 0.3, fill = "#FF9DA7")+
-    geom_line(aes(x = ScaledTime_fromMinGape * 100, y = (BalancingAnteriorStrain_mean-1)*100, col = "#9C755F"), lwd = 2) + 
+    geom_line(aes(x = ScaledTime_fromMinGape * 100, y = (BalancingAnteriorStrain_mean-1)*100, col = "#9C755F"), lwd = 1) + 
     geom_ribbon(aes(x = ScaledTime_fromMinGape * 100,
                       ymin = (BalancingAnteriorStrain_mean - BalancingAnteriorStrain_sd-1)*100 , 
                       ymax = (BalancingAnteriorStrain_mean  + BalancingAnteriorStrain_sd-1)*100 ), alpha = 0.3, fill = "#9C755F")+
@@ -821,11 +821,11 @@ plot_lr_midtopost_distance <- function(summary_object, analysis_object, limits){
     geom_vline(data = analysis_object$cranium_CRS$summary_transition_times,
                aes(xintercept = .data[['SO-FO_mean']] * 100), linetype = "dashed", col= "gray61")+
     geom_line(aes(x = ScaledTime_fromMinGape*100, 
-                   y = (WorkingPosteriorStrain_mean - 1)*100 , col = "#FF9DA7"), lwd = 2) + 
+                   y = (WorkingPosteriorStrain_mean - 1)*100 , col = "#FF9DA7"), lwd = 1) + 
     geom_ribbon(aes(x = ScaledTime_fromMinGape * 100, 
                       ymin = (WorkingPosteriorStrain_mean - WorkingPosteriorStrain_sd - 1)*100 , 
                       ymax = (WorkingPosteriorStrain_mean + WorkingPosteriorStrain_sd-1)*100), fill = "#FF9DA7", alpha = 0.3)+
-    geom_line(aes(x = ScaledTime_fromMinGape * 100, y = (BalancingPosteriorStrain_mean-1)*100, col = "#9C755F"), lwd = 2) + 
+    geom_line(aes(x = ScaledTime_fromMinGape * 100, y = (BalancingPosteriorStrain_mean-1)*100, col = "#9C755F"), lwd = 1) + 
     geom_ribbon(aes(x = ScaledTime_fromMinGape* 100,
                       ymin = (BalancingPosteriorStrain_mean - BalancingPosteriorStrain_sd-1)*100, 
                       ymax = (BalancingPosteriorStrain_mean + BalancingPosteriorStrain_sd-1)*100), fill = "#9C755F", alpha = 0.3)+
@@ -858,7 +858,7 @@ plot_angle <- function(summary_object, analysis_object, limits) {
                aes(xintercept = .data[['FC-SC_mean']] * 100), linetype = "dashed", col= "gray61")+
     geom_vline(data = analysis_object$cranium_CRS$summary_transition_times,
                aes(xintercept = .data[['SO-FO_mean']] * 100), linetype = "dashed", col= "gray61")+
-    geom_line(aes(x = ScaledTime_fromMinGape * 100, y = TongueAngle_mean), lwd = 2) +
+    geom_line(aes(x = ScaledTime_fromMinGape * 100, y = TongueAngle_mean), lwd = 1) +
     geom_ribbon(aes(x = ScaledTime_fromMinGape *100, 
                     ymin = TongueAngle_mean - TongueAngle_sd,
                     ymax = TongueAngle_mean + TongueAngle_sd), alpha = 0.3) +

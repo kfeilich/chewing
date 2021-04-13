@@ -97,10 +97,12 @@ kiki_leftchews_tip <- plot_tongue_tip(kiki_summary, kiki_analysis, tip_limits)
 right_middle_limits <- multicolumn_find_limits(c("WorkingMiddleHorizontalRot", "WorkingMiddleVerticalRot"), chewbacca_summary, hestia_summary, jb_summary)
 left_middle_limits <- multicolumn_find_limits(c("WorkingMiddleHorizontalRot", "WorkingMiddleVerticalRot"), kiki_summary)
 middle_limits <- compare_limits(right_middle_limits, left_middle_limits)
+middle_limits <- -c(middle_limits[2], middle_limits[1])
 
 right_post_limits <- multicolumn_find_limits(c("WorkingPosteriorHorizontalRot", "WorkingPosteriorVerticalRot"), chewbacca_summary, hestia_summary, jb_summary)
 left_post_limits <- multicolumn_find_limits(c("WorkingPosteriorHorizontalRot", "WorkingPosteriorVerticalRot"), kiki_summary)
 post_limits <- compare_limits(right_post_limits, left_post_limits)
+post_limits <- -c(post_limits[2], post_limits[1])
 
 rotation_plot_limits <- compare_limits(middle_limits, post_limits)
 chewbacca_rightchews_middlerot <-  plot_rotations(chewbacca_summary, "middle", chewbacca_analysis, rotation_plot_limits)
