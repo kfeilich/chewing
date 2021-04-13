@@ -237,13 +237,13 @@ calculate_rotations <- function(trial_data){
   
   # NB: Negative to correct for axis of rotation polarity
   trial_data <- trial_data %>% 
-    mutate(MiddleHorizontalRot = -find_angle_to_z(.data[[middle_left_z]], .data[[middle_left_y]],
+    mutate(MiddleHorizontalRot = find_angle_to_z(.data[[middle_left_z]], .data[[middle_left_y]],
                                                  .data[[middle_right_z]], .data[[middle_right_y]]),
-           MiddleVerticalRot = -find_angle_to_y(.data[[middle_deep_z]], .data[[middle_deep_y]],
+           MiddleVerticalRot = find_angle_to_y(.data[[middle_deep_z]], .data[[middle_deep_y]],
                                                .data[[middle_surface_z]], .data[[middle_surface_y]]),
-           PostHorizontalRot = -find_angle_to_z(.data[[post_left_z]], .data[[post_left_y]],
+           PostHorizontalRot = find_angle_to_z(.data[[post_left_z]], .data[[post_left_y]],
                                                .data[[post_right_z]], .data[[post_right_y]]),
-           PostVerticalRot = -find_angle_to_y(.data[[post_deep_z]], .data[[post_deep_y]],
+           PostVerticalRot = find_angle_to_y(.data[[post_deep_z]], .data[[post_deep_y]],
                                              .data[[post_surface_z]], .data[[post_surface_y]]))
   trial_data
   
@@ -677,15 +677,15 @@ plot_rotations <- function(analysis_summary,
                aes(xintercept = .data[['FC-SC_mean']] * 100), linetype = "dashed", col= "gray61")+
     geom_vline(data = analysis_object$cranium_CRS$summary_transition_times,
                aes(xintercept = .data[['SO-FO_mean']] * 100), linetype = "dashed", col= "gray61")+
-    geom_line(aes(x = .data[["ScaledTime_fromMinGape"]] * 100, y = .data[[paste0(horz_rotation_to_plot,"_mean")]], col = "blue"), lwd = 2) +
+    geom_line(aes(x = .data[["ScaledTime_fromMinGape"]] * 100, y = -.data[[paste0(horz_rotation_to_plot,"_mean")]], col = "blue"), lwd = 2) +
     geom_ribbon(aes(x = .data[["ScaledTime_fromMinGape"]] * 100,
-                    ymin = .data[[paste0(horz_rotation_to_plot,"_mean")]] - .data[[paste0(horz_rotation_to_plot,"_sd")]],
-                    ymax = .data[[paste0(horz_rotation_to_plot,"_mean")]] + .data[[paste0(horz_rotation_to_plot,"_sd")]]),
+                    ymin = -.data[[paste0(horz_rotation_to_plot,"_mean")]] - .data[[paste0(horz_rotation_to_plot,"_sd")]],
+                    ymax = -.data[[paste0(horz_rotation_to_plot,"_mean")]] + .data[[paste0(horz_rotation_to_plot,"_sd")]]),
                 fill = "blue", alpha = 0.2)+
-    geom_line(aes(x = ScaledTime_fromMinGape* 100, y = .data[[paste0(vert_rotation_to_plot, "_mean")]], col = "red"), lwd = 2) +
+    geom_line(aes(x = ScaledTime_fromMinGape* 100, y = -.data[[paste0(vert_rotation_to_plot, "_mean")]], col = "red"), lwd = 2) +
     geom_ribbon(aes(x = .data[["ScaledTime_fromMinGape"]] * 100,
-                    ymin = .data[[paste0(vert_rotation_to_plot,"_mean")]] - .data[[paste0(vert_rotation_to_plot,"_sd")]],
-                    ymax = .data[[paste0(vert_rotation_to_plot,"_mean")]] + .data[[paste0(vert_rotation_to_plot,"_sd")]]),
+                    ymin = -.data[[paste0(vert_rotation_to_plot,"_mean")]] - .data[[paste0(vert_rotation_to_plot,"_sd")]],
+                    ymax = -.data[[paste0(vert_rotation_to_plot,"_mean")]] + .data[[paste0(vert_rotation_to_plot,"_sd")]]),
                 fill = "red", alpha = 0.2)+
     xlab("Scaled Time")+
     ylab("Rotation (degrees)")+
@@ -706,7 +706,7 @@ plot_gape_pitch <- function(summary_object, analysis_object, limits){
   out_plot <- summary_object %>%
     ggplot() +
     geom_rect(data = analysis_object$cranium_CRS$summary_transition_times,
-              aes(xmin = (.data[['FC-SC_mean']] - .data[['FC-SC_se']]) *100,
+              aes(xmin = (.data[['FC-SC_mean']] - .data[['FC-SC_se']]) *100,-
                   xmax = (.data[['FC-SC_mean']] + .data[['FC-SC_se']]) *100,
                   ymin = -Inf, ymax = Inf), alpha = 0.1)+
     geom_rect(data = analysis_object$cranium_CRS$summary_transition_times,
