@@ -109,7 +109,7 @@ get_resting_position <- function(interpolated_data){
                         "RightMiddleToAnterior", "SurfaceMiddleToAnterior", "DeepMiddleToAnterior",
                         "MiddleLeftToRight", "MiddleSurfaceToDeep", "PosteriorLeftToRight", "PosteriorSurfaceToDeep")
   mandible_columns <- c("mandiblePitch", "mandibleYaw")
-  tongue_columns <- c("TongueAngle")
+  tongue_columns <- c("TongueAngle", "TongueAngleLeft", "TongueAngleRight")
   
   resting_position <- interpolated_data %>% 
     filter(ScaledTime_fromMinGape == 0) %>%
@@ -148,6 +148,8 @@ subtract_resting_position <- function(data_object){
       data_object$interpolated_data$mandibleYaw[indices] = data_object$interpolated_data$mandibleYaw[indices] - rest_position$mandibleYaw
       data_object$interpolated_data[,tongue_anterior_tip][indices] = data_object$interpolated_data[,tongue_anterior_tip][indices] - rest_position[,tongue_anterior_tip]
       data_object$interpolated_data$TongueAngle[indices] = data_object$interpolated_data$TongueAngle[indices] - rest_position$TongueAngle
+      data_object$interpolated_data$TongueAngleLeft[indices] = data_object$interpolated_data$TongueAngleLeft[indices] - rest_position$TongueAngleLeft
+      data_object$interpolated_data$TongueAngleRight[indices] = data_object$interpolated_data$TongueAngleRight[indices] - rest_position$TongueAngleRight
      }}
   data_object
 }
@@ -285,6 +287,84 @@ calculate_tongue_angle <- function(trial_data){
   trial_data$TongueAngle <- angle
   trial_data
   }
+
+
+
+
+# calculate_tongue_angle
+calculate_tongue_angle_left <- function(trial_data){
+  left_posterior_x <- names(trial_data)[str_detect(names(trial_data), pattern = "Tongue[.]*[PG]*[.]*Left[.]*[PG]*_[0-9]+Hz_X$")]
+  
+  left_posterior_y <- names(trial_data)[str_detect(names(trial_data), pattern = "Tongue[.]*[PG]*[.]*Left[.]*[PG]*_[0-9]+Hz_Y$")]
+  left_posterior_z <- names(trial_data)[str_detect(names(trial_data), pattern = "Tongue[.]*[PG]*[.]*Left[.]*[PG]*_[0-9]+Hz_Z$")]
+  left_middle_x <- names(trial_data)[str_detect(names(trial_data),
+                                                pattern = "^[Tt]ongue[.]*[Ll]eft[.]*[Ll]ateral_[0-9]+Hz_X$")]
+  left_middle_y <- names(trial_data)[str_detect(names(trial_data),
+                                                pattern = "^[Tt]ongue[.]*[Ll]eft[.]*[Ll]ateral_[0-9]+Hz_Y$")]
+  left_middle_z <- names(trial_data)[str_detect(names(trial_data),
+                                                pattern = "^[Tt]ongue[.]*[Ll]eft[.]*[Ll]ateral_[0-9]+Hz_Z$")]
+  anterior_marker_x <- names(trial_data)[str_detect(names(trial_data),
+                                                    pattern = "^[Tt]ongue[.]*[Aa]nterior_[0-9]+Hz_X$")]
+  anterior_marker_y <- names(trial_data)[str_detect(names(trial_data),
+                                                    pattern = "^[Tt]ongue[.]*[Aa]nterior_[0-9]+Hz_Y$")]
+  anterior_marker_z <- names(trial_data)[str_detect(names(trial_data),
+                                                    pattern = "^[Tt]ongue[.]*[Aa]nterior_[0-9]+Hz_Z$")]
+  #BA = middle to hyoid
+  vector_BA_x <- pull(trial_data, .data[[left_posterior_x]]) - pull(trial_data, .data[[left_middle_x]])
+  vector_BA_y <- pull(trial_data, .data[[left_posterior_y]]) - pull(trial_data, .data[[left_middle_y]])
+  vector_BA_z <- pull(trial_data, .data[[left_posterior_z]]) - pull(trial_data, .data[[left_middle_z]])
+  
+  #BC = middle to anterior
+  vector_BC_x <- pull(trial_data, .data[[anterior_marker_x]]) - pull(trial_data, .data[[left_middle_x]])
+  vector_BC_y <- pull(trial_data, .data[[anterior_marker_y]]) - pull(trial_data, .data[[left_middle_y]])
+  vector_BC_z <- pull(trial_data, .data[[anterior_marker_z]]) - pull(trial_data, .data[[left_middle_z]])
+  
+  dot_product_BA_BC <- (vector_BA_x * vector_BC_x) + (vector_BA_y * vector_BC_y)+ (vector_BA_z*vector_BC_z)
+  length_BA <- sqrt(vector_BA_x**2 + vector_BA_y**2 + vector_BA_z**2)
+  length_BC <- sqrt(vector_BC_x**2 + vector_BC_y**2 + vector_BC_z**2)
+  
+  angle <- acos(dot_product_BA_BC / (length_BA * length_BC)) * 180 / pi
+  trial_data$TongueAngleLeft <- angle
+  trial_data
+}
+
+
+# calculate_tongue_angle
+calculate_tongue_angle_right <- function(trial_data){
+  right_posterior_x <- names(trial_data)[str_detect(names(trial_data), pattern = "Tongue[.]*[PG]*[.]*Right[.]*[PG]*_[0-9]+Hz_X$")]
+  
+  right_posterior_y <- names(trial_data)[str_detect(names(trial_data), pattern = "Tongue[.]*[PG]*[.]*Right[.]*[PG]*_[0-9]+Hz_Y$")]
+  right_posterior_z <- names(trial_data)[str_detect(names(trial_data), pattern = "Tongue[.]*[PG]*[.]*Right[.]*[PG]*_[0-9]+Hz_Z$")]
+  right_middle_x <- names(trial_data)[str_detect(names(trial_data),
+                                                 pattern = "^[Tt]ongue[.]*[Rr]ight[.]*[Ll]ateral_[0-9]+Hz_X$")]
+  right_middle_y <- names(trial_data)[str_detect(names(trial_data),
+                                                 pattern = "^[Tt]ongue[.]*[Rr]ight[.]*[Ll]ateral_[0-9]+Hz_Y$")]
+  right_middle_z <- names(trial_data)[str_detect(names(trial_data),
+                                                 pattern = "^[Tt]ongue[.]*[Rr]ight[.]*[Ll]ateral_[0-9]+Hz_Z$")]
+  anterior_marker_x <- names(trial_data)[str_detect(names(trial_data),
+                                                    pattern = "^[Tt]ongue[.]*[Aa]nterior_[0-9]+Hz_X$")]
+  anterior_marker_y <- names(trial_data)[str_detect(names(trial_data),
+                                                    pattern = "^[Tt]ongue[.]*[Aa]nterior_[0-9]+Hz_Y$")]
+  anterior_marker_z <- names(trial_data)[str_detect(names(trial_data),
+                                                    pattern = "^[Tt]ongue[.]*[Aa]nterior_[0-9]+Hz_Z$")]
+  #BA = middle to hyoid
+  vector_BA_x <- pull(trial_data, .data[[right_posterior_x]]) - pull(trial_data, .data[[right_middle_x]])
+  vector_BA_y <- pull(trial_data, .data[[right_posterior_y]]) - pull(trial_data, .data[[right_middle_y]])
+  vector_BA_z <- pull(trial_data, .data[[right_posterior_z]]) - pull(trial_data, .data[[right_middle_z]])
+  
+  #BC = middle to anterior
+  vector_BC_x <- pull(trial_data, .data[[anterior_marker_x]]) - pull(trial_data, .data[[right_middle_x]])
+  vector_BC_y <- pull(trial_data, .data[[anterior_marker_y]]) - pull(trial_data, .data[[right_middle_y]])
+  vector_BC_z <- pull(trial_data, .data[[anterior_marker_z]]) - pull(trial_data, .data[[right_middle_z]])
+  
+  dot_product_BA_BC <- (vector_BA_x * vector_BC_x) + (vector_BA_y * vector_BC_y)+ (vector_BA_z*vector_BC_z)
+  length_BA <- sqrt(vector_BA_x**2 + vector_BA_y**2 + vector_BA_z**2)
+  length_BC <- sqrt(vector_BC_x**2 + vector_BC_y**2 + vector_BC_z**2)
+  
+  angle <- acos(dot_product_BA_BC / (length_BA * length_BC)) * 180 / pi
+  trial_data$TongueAngleRight <- angle
+  trial_data
+}
 
 # calculate_distances
 calculate_distances <- function(trial_data){
@@ -504,7 +584,7 @@ interpolate_cycles <- function(list_of_events){
                         "SurfacePosteriorToMiddle", "DeepPosteriorToMiddle", "LeftMiddleToAnterior",
                         "RightMiddleToAnterior", "SurfaceMiddleToAnterior", "DeepMiddleToAnterior",
                         "MiddleLeftToRight", "MiddleSurfaceToDeep", "PosteriorLeftToRight", "PosteriorSurfaceToDeep")
-  angle_columns <- c("TongueAngle")
+  angle_columns <- c("TongueAngle", "TongueAngleLeft", "TongueAngleRight")
   
   # Initialize an empty list (which will later be filled and concatenated)
   events_cycles <- vector(mode = "list", length = num_events)
@@ -580,6 +660,11 @@ chew_analysis <- function(animal_info){
   # Step 6: Calculate tongue angle ---
   cranium_CRS_object$trial_data <- calculate_tongue_angle(cranium_CRS_object$trial_data)
   mandible_CRS_object$trial_data <- calculate_tongue_angle(mandible_CRS_object$trial_data)
+  cranium_CRS_object$trial_data <- calculate_tongue_angle_left(cranium_CRS_object$trial_data)
+  mandible_CRS_object$trial_data <- calculate_tongue_angle_left(mandible_CRS_object$trial_data)
+  cranium_CRS_object$trial_data <- calculate_tongue_angle_right(cranium_CRS_object$trial_data)
+  mandible_CRS_object$trial_data <- calculate_tongue_angle_right(mandible_CRS_object$trial_data)
+  
   
   # Step 7: Split events  ----
   cranium_CRS_object$list_of_events <- cranium_CRS_object$trial_data %>%
@@ -932,6 +1017,8 @@ find_times_to_minima <- function(cranium_CRS_object, side){
   bulk_find_time_to_minimum <- function(cranium_CRS_object, pattern, side){
     find_time_to_minimum<-function(cycle_df, pattern){
       column <- names(cycle_df)[str_detect(names(cycle_df), pattern )]
+      if(length(column) > 1){column <- column[1]}
+      print(column)
       if(sum(!is.na(pull(cycle_df, .data[[column]])) == 0)){
         time <- NA
       } else{
@@ -958,7 +1045,7 @@ find_times_to_minima <- function(cranium_CRS_object, side){
    columns <- c("WorkingMiddleHorizontalRot", "WorkingMiddleVerticalRot", "WorkingPosteriorHorizontalRot",
                "WorkingPosteriorVerticalRot", "WorkingPosteriorStrain", "BalancingPosteriorStrain", 
                "WorkingAnteriorStrain", "BalancingAnteriorStrain", "mandiblePitch", 
-               "TongueAngle")
+               "TongueAngle", "TongueAngleLeft", "TongueAngleRight")
   
   if(side == "right"){
   filtered_cycles  <- cranium_CRS_object$cleaned_cycles %>%
@@ -1118,4 +1205,50 @@ find_transition_times <- function(cranium_CRS_object, animal_info){
     summarize_all(list(mean = function(x){mean(x, na.rm =TRUE)}, sd = function(x){sd(x, na.rm = TRUE)}, se = function(x){sd(x, na.rm= TRUE)/sqrt(n())}))
     
     summary_data
+}
+
+
+plot_angles <- function(summary_object, analysis_object, limits, working_side = "right") {
+  if(working_side == "left"){
+    working_angle <- "TongueAngleLeft"
+    balancing_angle <- "TongueAngleRight"} 
+  else{
+    working_angle <- "TongueAngleRight"
+    balancing_angle <- "TongueAngleLeft"
+  }
+  
+  out_plot <- summary_object %>%
+    ggplot() + 
+    geom_rect(data = analysis_object$cranium_CRS$summary_transition_times,
+              aes(xmin = (.data[['FC-SC_mean']] - .data[['FC-SC_se']]) *100,
+                  xmax = (.data[['FC-SC_mean']] + .data[['FC-SC_se']]) *100,
+                  ymin = -Inf, ymax = Inf), alpha = 0.1)+
+    geom_rect(data = analysis_object$cranium_CRS$summary_transition_times,
+              aes(xmin = (.data[['SO-FO_mean']] - .data[['SO-FO_se']]) *100,
+                  xmax = (.data[['SO-FO_mean']] + .data[['SO-FO_se']]) *100,
+                  ymin = -Inf, ymax = Inf), alpha = 0.1)+
+    geom_vline(data = analysis_object$cranium_CRS$summary_transition_times,
+               aes(xintercept = .data[['FC-SC_mean']] * 100), linetype = "dashed", col= "gray61")+
+    geom_vline(data = analysis_object$cranium_CRS$summary_transition_times,
+               aes(xintercept = .data[['SO-FO_mean']] * 100), linetype = "dashed", col= "gray61")+
+    geom_line(aes(x = .data[["ScaledTime_fromMinGape"]] * 100, 
+                  y = .data[[paste0(working_angle, "_mean")]]), lwd = 1, color = "#FF9DA7") +
+    geom_ribbon(aes(x = ScaledTime_fromMinGape *100, 
+                    ymin = .data[[paste0(working_angle, "_mean")]] - .data[[paste0(working_angle, "_sd")]],
+                    ymax = .data[[paste0(working_angle, "_mean")]] + .data[[paste0(working_angle, "_sd")]]), 
+                    fill = "#FF9DA7", alpha = 0.3) +
+    geom_line(aes(x = .data[["ScaledTime_fromMinGape"]] * 100, 
+                  y = .data[[paste0(balancing_angle, "_mean")]]), lwd = 1, color = "#9C755F") +
+    geom_ribbon(aes(x = ScaledTime_fromMinGape *100, 
+                    ymin = .data[[paste0(balancing_angle, "_mean")]] - .data[[paste0(balancing_angle, "_sd")]],
+                    ymax = .data[[paste0(balancing_angle, "_mean")]] + .data[[paste0(balancing_angle, "_sd")]]), 
+                fill = "#9C755F", alpha = 0.3) +
+    xlab("Scaled Time")+
+    ylab("Angle (degrees)")+
+    scale_x_continuous(limits = c(0,100), expand = c(0,0))+
+    scale_y_continuous(limits = limits, expand = c(0.1, 0.1))+
+    theme_classic()+
+    theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_blank(), plot.margin = unit(c(1,1,1,1), "lines"))
+  
+  out_plot
 }

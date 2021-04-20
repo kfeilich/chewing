@@ -139,6 +139,12 @@ hestia_angle <- plot_angle(hestia_summary, hestia_analysis,angle_limits)
 jb_angle <- plot_angle(jb_summary, jb_analysis, angle_limits)
 kiki_angle <- plot_angle(kiki_summary, kiki_analysis, angle_limits)
 
+lateral_angle_limits <- multicolumn_find_limits(c("TongueAngleLeft", "TongueAngleRight"),
+                                                chewbacca_summary, hestia_summary, jb_summary, kiki_summary)
+chewbacca_angles <- plot_angles(chewbacca_summary, chewbacca_analysis, lateral_angle_limits, "right")
+hestia_angles <- plot_angles(hestia_summary, hestia_analysis,lateral_angle_limits, "right")
+jb_angles <- plot_angles(jb_summary, jb_analysis, lateral_angle_limits, "right")
+kiki_angles <- plot_angles(kiki_summary, kiki_analysis, lateral_angle_limits, "left")
 
 # BIG COMPOSITE PLOT ----
 
