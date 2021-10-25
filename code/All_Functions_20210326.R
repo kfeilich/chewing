@@ -146,7 +146,7 @@ subtract_resting_position <- function(data_object){
       data_object$interpolated_data$PosteriorSurfaceToDeep[indices] = data_object$interpolated_data$PosteriorSurfaceToDeep[indices] / rest_position$PosteriorSurfaceToDeep
       data_object$interpolated_data$mandiblePitch[indices] = data_object$interpolated_data$mandiblePitch[indices] - rest_position$mandiblePitch
       data_object$interpolated_data$mandibleYaw[indices] = data_object$interpolated_data$mandibleYaw[indices] - rest_position$mandibleYaw
-      data_object$interpolated_data[,tongue_anterior_tip][indices] = data_object$interpolated_data[,tongue_anterior_tip][indices] - rest_position[,tongue_anterior_tip]
+      # data_object$interpolated_data[,tongue_anterior_tip][indices] = data_object$interpolated_data[,tongue_anterior_tip][indices] - rest_position[,tongue_anterior_tip]
       data_object$interpolated_data$TongueAngle[indices] = data_object$interpolated_data$TongueAngle[indices] - rest_position$TongueAngle
       data_object$interpolated_data$TongueAngleLeft[indices] = data_object$interpolated_data$TongueAngleLeft[indices] - rest_position$TongueAngleLeft
       data_object$interpolated_data$TongueAngleRight[indices] = data_object$interpolated_data$TongueAngleRight[indices] - rest_position$TongueAngleRight
@@ -1198,10 +1198,10 @@ find_transition_times <- function(cranium_CRS_object, animal_info){
   
   summary_data <- all_cycles %>% 
     filter(Event_Cycle %in% event_cycles) %>%
-    filter(GapeCyclePhase %in% c("FC-SC", "SO-FO")) %>%
+#    filter(GapeCyclePhase %in% c("FC-SC", "SO-FO")) %>%
     pivot_wider(names_from = GapeCyclePhase,values_from = ScaledTime_fromMinGape) %>%
     filter(CycleSide_fromMinGape == animal_info$working_side, CycleType_fromMinGape == "Chew" ) %>%
-    dplyr::select(c("FC-SC", "SO-FO")) %>%
+    dplyr::select(c("FC-SC", "SO-FO", "MinGape", "MaxGape")) %>%
     summarize_all(list(mean = function(x){mean(x, na.rm =TRUE)}, sd = function(x){sd(x, na.rm = TRUE)}, se = function(x){sd(x, na.rm= TRUE)/sqrt(n())}))
     
     summary_data

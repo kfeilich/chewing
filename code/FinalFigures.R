@@ -177,6 +177,76 @@ plot_grid(chewbacca_rightchews_gape, hestia_rightchews_gape, jb_rightchews_gape,
           ncol = 4)
 dev.off()
 
+# HIIEMAE STYLE PLOTS -- CHEWBACCA ONLY
+# Tongue tip, middle, back
+# First label points
+chewbacca_hiiemae_data <- chewbacca_summary %>%
+  mutate(CyclePhase = ScaledTime_fromMinGape)
+chewbacca_hiiemae_data$CyclePhase[which(chewbacca_hiiemae_data$ScaledTime_fromMinGape > round(chewbacca_analysis$cranium_CRS$summary_transition_times$`FC-SC_mean`,2))] <- "SC"
+chewbacca_hiiemae_data$CyclePhase[which(chewbacca_hiiemae_data$ScaledTime_fromMinGape < round(chewbacca_analysis$cranium_CRS$summary_transition_times$`SO-FO_mean`,2))] <- "SO"
+chewbacca_hiiemae_data$CyclePhase[which(chewbacca_hiiemae_data$ScaledTime_fromMinGape  == round(chewbacca_analysis$cranium_CRS$summary_transition_times$`SO-FO_mean`,2))] <- "SO-FO"
+chewbacca_hiiemae_data$CyclePhase[which(chewbacca_hiiemae_data$ScaledTime_fromMinGape == round(chewbacca_analysis$cranium_CRS$summary_transition_times$`FC-SC_mean`,2))] <- "FC-SC"
+chewbacca_hiiemae_data$CyclePhase[which(chewbacca_hiiemae_data$ScaledTime_fromMinGape == round(chewbacca_analysis$cranium_CRS$summary_transition_times$`MaxGape_mean`,2))] <- "MaxGape"
+chewbacca_hiiemae_data$CyclePhase[which(chewbacca_hiiemae_data$ScaledTime_fromMinGape > round(chewbacca_analysis$cranium_CRS$summary_transition_times$`SO-FO_mean`,2) & chewbacca_hiiemae_data$ScaledTime_fromMinGape < round(chewbacca_analysis$cranium_CRS$summary_transition_times$MaxGape_mean, 2))] <- "FO"
+chewbacca_hiiemae_data$CyclePhase[which(chewbacca_hiiemae_data$ScaledTime_fromMinGape < round(chewbacca_analysis$cranium_CRS$summary_transition_times$`FC-SC_mean`,2) & chewbacca_hiiemae_data$ScaledTime_fromMinGape > round(chewbacca_analysis$cranium_CRS$summary_transition_times$MaxGape_mean, 2))] <- "FC"
+
+# Then, make phase ordered to work with colors. 
+chewbacca_hiiemae_data$CyclePhase <- factor(chewbacca_hiiemae_data$CyclePhase, 
+                                            levels = c("SO","SO-FO", "FO", "MaxGape", "FC",  "FC-SC", "SC"), ordered = TRUE)
+
+# Then use ggplot to make the plots -- make sure to comment out the line 
+# subtracting the resting position for the anterior tongue tip, 
+# "All_Functions_20210326.R", ln149
+chewbacca_lateral_plot <- ggplot(chewbacca_hiiemae_data) + 
+  geom_point(aes(x = TongueAnterior_25Hz_X_mean*10, y = TongueAnterior_25Hz_Y_mean*10, color = CyclePhase))+
+  geom_point(aes(x = TongueMiddleSurface_25Hz_X_mean*10, y = TongueMiddleSurface_25Hz_Y_mean* 10, color = CyclePhase))+
+  geom_point(aes(x = TonguePosteriorDeep_25Hz_X_mean*10, y = TonguePosteriorDeep_25Hz_Y_mean*10, color = CyclePhase)) + 
+  xlim(c(-20,60))+
+  ylim(c(-30,30))+
+  coord_equal()+
+  xlab("Antero-posterior (mm)")+
+  ylab("Supero-inferior (mm)")+
+  ggtitle("Lateral view of midline points (sagittal flexion)")+
+  theme_bw()
+  
+chewbacca_dorsal_plot <- ggplot(chewbacca_hiiemae_data) + 
+  geom_point(aes(x = TongueAnterior_25Hz_X_mean*10, y = TongueAnterior_25Hz_Z_mean*10, color = CyclePhase))+
+  geom_point(aes(x = TongueMiddleSurface_25Hz_X_mean*10, y = TongueMiddleSurface_25Hz_Z_mean*10, color = CyclePhase))+
+  geom_point(aes(x = TonguePosteriorDeep_25Hz_X_mean*10, y = TonguePosteriorDeep_25Hz_Z_mean*10, color = CyclePhase)) + 
+  xlim(c(-20,60))+
+  ylim(c(-30,30))+
+  coord_equal()+
+  xlab("Antero-posterior (mm)")+
+  ylab("Left-Right (mm)")+
+  ggtitle("Dorsal view of midline points")+
+  
+  theme_bw()
+
+chewbacca_mid_coronal_plot <- ggplot(chewbacca_hiiemae_data) + 
+  geom_point(aes(x = TongueMiddleSurface_25Hz_Z_mean*10, y = TongueMiddleSurface_25Hz_Y_mean*10, color = CyclePhase))+
+  geom_point(aes(x = TongueMiddleDeep_25Hz_Z_mean*10, y = TongueMiddleDeep_25Hz_Y_mean*10, color = CyclePhase))+
+  geom_point(aes(x = TongueLeftLateral_25Hz_Z_mean*10, y = TongueLeftLateral_25Hz_Y_mean*10, color = CyclePhase))+
+  geom_point(aes(x = TongueRightLateral_25Hz_Z_mean*10, y = TongueRightLateral_25Hz_Y_mean*10, color = CyclePhase))+
+  xlim(c(-30,30))+
+  ylim(c(-30,30))+
+  coord_equal()+
+  xlab("Left-Right (mm)")+
+  ylab("Supero-inferior (mm)")+
+  ggtitle("Coronal view of middle tongue points")+
+  theme_bw()
+  
+chewbacca_post_coronal_plot <- ggplot(chewbacca_hiiemae_data) + 
+  geom_point(aes(x = TonguePosteriorSurface_25Hz_Z_mean*10, y = TonguePosteriorSurface_25Hz_Y_mean*10, color = CyclePhase))+
+  geom_point(aes(x = TonguePosteriorDeep_25Hz_Z_mean*10, y = TonguePosteriorDeep_25Hz_Y_mean*10, color = CyclePhase))+
+  geom_point(aes(x = TongueLeftPG_25Hz_Z_mean*10, y = TongueLeftPG_25Hz_Y_mean*10, color = CyclePhase))+
+  geom_point(aes(x = TongueRightPG_25Hz_Z_mean*10, y = TongueRightPG_25Hz_Y_mean*10, color = CyclePhase))+
+  xlim(c(-30,30))+
+  ylim(c(-30,30))+
+  coord_equal()+
+  xlab("Left-Right (mm)")+
+  ylab("Supero-inferior (mm)")+
+  ggtitle("Coronal view of posterior tongue points")+
+  theme_bw()
 
 # BOXPLOTS OF CIRCULAR STATS
 chewbacca_segments_to_draw <- filter(chewbacca_stats[[1]], whigh > 360) %>%
